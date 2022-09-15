@@ -3,6 +3,31 @@ from frontend.css_and_js import *
 from frontend.css_and_js import css
 import frontend.ui_functions as uifn
 
+art_details="""Highly detailed, surrealism, trending on art station, triadic color scheme, smooth, sharp focus, matte, elegant, the most beautiful image ever seen, illustration, digital paint, dark, gloomy, octane render, 8k, 4k, washed colors, sharp, dramatic lighting, beautiful, post processing, picture of the day, ambient lighting, epic composition""".split(", ")
+styles="""Realistic
+Oil painting
+Pencil drawing
+Concept art""".split("\n")
+artists="""John Singer Sargent
+Edgar Degas
+Paul Cézanne
+Jan van Eyck
+Leonardo DaVinci
+Vincent Van Gogh
+Johannes Vermeer
+Rembrandt
+Pencil/Pen drawing
+Albrecht Dürer
+Leonardo da Vinci
+Michelangelo
+Jean-Auguste-Dominique Ingres
+Thomas Moran
+Claude Monet
+Alfred Bierstadt
+Frederic Edwin Church""".split("\n")
+
+def append_prompt(text1, text2):
+    return text1+", "+text2
 def draw_gradio_ui(opt, img2img=lambda x: x, txt2img=lambda x: x, txt2img_defaults={}, RealESRGAN=True, GFPGAN=True,
                    txt2img_toggles={}, txt2img_toggle_defaults='k_euler', show_embeddings=False, img2img_defaults={},
                    img2img_toggles={}, img2img_toggle_defaults={}, sample_img2img=None, img2img_mask_modes=None,
@@ -184,6 +209,31 @@ def draw_gradio_ui(opt, img2img=lambda x: x, txt2img=lambda x: x, txt2img_defaul
                                         inputs=output_img2img_seed, outputs=[],
                                         _js='(x) => navigator.clipboard.writeText(x)', fn=None, show_progress=False)
                                 output_img2img_stats = gr.HTML(label='Stats')
+
+                        gr.Markdown('#### Prompt suggestions.')
+                        with gr.Tabs():
+                            with gr.TabItem("Artists", id="img2img_artists_tab"):
+                                gr.Markdown("Select an artist name to add that into prompt.")
+                                with gr.Row():
+                                    artist_btn={}
+                                    for idx, artist in enumerate(artists):
+                                        t=gr.Textbox(value=artist, visible=False)
+                                        artist_btn[idx] = gr.Button(artist).click(append_prompt, inputs=[img2img_prompt, t], outputs=[img2img_prompt])
+                            with gr.TabItem("Art Details", id="img2img_art_details_tab"):
+                                gr.Markdown("Select an art suggestion to add that into prompt.")
+                                with gr.Row():
+                                    art_details_btn={}
+                                    for idx, art in enumerate(art_details):
+                                        t=gr.Textbox(value=art, visible=False)
+                                        art_details_btn[idx] = gr.Button(art).click(append_prompt, inputs=[img2img_prompt, t], outputs=[img2img_prompt])
+                            with gr.TabItem("Styles", id="img2img_styles_tab"):
+                                gr.Markdown("Select an style to add that into prompt.")
+                                with gr.Row():
+                                    styles_btn={}
+                                    for idx, style in enumerate(styles):
+                                        t=gr.Textbox(value=style, visible=False)
+                                        styles_btn[idx] = gr.Button(style).click(append_prompt, inputs=[img2img_prompt, t], outputs=[img2img_prompt])
+
                 gr.Markdown('# img2img settings')
 
                 with gr.Row():
