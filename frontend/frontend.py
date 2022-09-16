@@ -3,6 +3,7 @@ from frontend.css_and_js import *
 from frontend.css_and_js import css
 import frontend.ui_functions as uifn
 
+emotions="""admiration, adoration, aesthetic appreciation,  amusement, anger, anxiety, awe, awkwardness, boredom,  calmness, confusion, craving, disgust, empathic pain,  entrancement, excitement, fear, horror, interest, joy, nostalgia,  relief, romance, sadness, satisfaction, surprise""".split(", ")
 art_details="""Highly detailed, surrealism, trending on art station, triadic color scheme, smooth, sharp focus, matte, elegant, the most beautiful image ever seen, illustration, digital paint, dark, gloomy, octane render, 8k, 4k, washed colors, sharp, dramatic lighting, beautiful, post processing, picture of the day, ambient lighting, epic composition""".split(", ")
 styles="""Realistic
 Oil painting
@@ -217,7 +218,7 @@ def draw_gradio_ui(opt, img2img=lambda x: x, txt2img=lambda x: x, txt2img_defaul
                                 with gr.Row():
                                     artist_btn={}
                                     for idx, artist in enumerate(artists):
-                                        t=gr.Textbox(value=artist, visible=False)
+                                        t=gr.Textbox(value="An art by "+artist, visible=False)
                                         artist_btn[idx] = gr.Button(artist).click(append_prompt, inputs=[img2img_prompt, t], outputs=[img2img_prompt])
                             with gr.TabItem("Art Details", id="img2img_art_details_tab"):
                                 gr.Markdown("Select an art suggestion to add that into prompt.")
@@ -233,6 +234,13 @@ def draw_gradio_ui(opt, img2img=lambda x: x, txt2img=lambda x: x, txt2img_defaul
                                     for idx, style in enumerate(styles):
                                         t=gr.Textbox(value=style, visible=False)
                                         styles_btn[idx] = gr.Button(style).click(append_prompt, inputs=[img2img_prompt, t], outputs=[img2img_prompt])
+                            with gr.TabItem("Emotions", id="img2img_emotions_tab"):
+                                gr.Markdown("Select an emotion to add that into prompt.")
+                                with gr.Row():
+                                    styles_btn={}
+                                    for idx, emotion in enumerate(emotions):
+                                        t=gr.Textbox(value="with "+emotion+" emotion", visible=False)
+                                        styles_btn[idx] = gr.Button(emotion).click(append_prompt, inputs=[img2img_prompt, t], outputs=[img2img_prompt])
 
                 gr.Markdown('# img2img settings')
 
